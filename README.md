@@ -1,6 +1,8 @@
 # uc-no-response
 
-[![Powered by Kedro](https://img.shields.io/badge/powered_by-kedro-ffc900?logo=kedro)](https://kedro.org)
+[![Kedro](https://img.shields.io/badge/powered_by-kedro-ffc900?logo=kedro)](https://kedro.org)
+![MLflow](https://img.shields.io/badge/MLflow-active-blue)
+![Python](https://img.shields.io/badge/python-3.10-blue.svg)
 
 ## Overview
 
@@ -16,6 +18,51 @@ In order to get the best out of the template:
 * Make sure your results can be reproduced by following a data engineering convention
 * Don't commit data to your repository
 * Don't commit any credentials or your local configuration to your repository. Keep all your credentials and local configuration in `conf/local/`
+
+## Architecture Overview
+
+```mermaid
+%% Architecture Diagram for Kedro/MLflow Binary Classification Pipeline
+graph TD
+    A[Raw Data\nCSV/Parquet] --> B(Data Preprocessing)
+    B --> C[Processed Data]
+    
+    subgraph Kedro Pipeline
+        B -->|"1. fill_null_values()"| C
+        B -->|"2. create_dummy_vars()"| C
+        B -->|"3. normalize()"| C
+        C --> D{Model Training}
+    end
+    
+    subgraph Model Training
+        D -->|XGBoost| E[Hyperparameter Tuning\nRandomizedSearchCV]
+        E -->|Best Model| F[Evaluation]
+        F --> G[Metrics: Recall, F2, Cost]
+        F --> H[Confusion Matrix]
+    end
+    
+    subgraph MLflow Tracking
+        G --> I[(MLflow Server)]
+        H --> I
+        E -->|"Log params/metrics"| I
+    end
+    
+    subgraph Output Artifacts
+        I --> J[Model Registry\n(Pickle/MLflow)]
+        I --> K[Performance Reports\n(JSON/PNG)]
+    end
+    
+    style A fill:#F9E79F,stroke:#F1C40F
+    style B fill:#AED6F1,stroke:#3498DB
+    style D fill:#A2D9CE,stroke:#16A085
+    style E fill:#F5B7B1,stroke:#E74C3C
+    style I fill:#D2B4DE,stroke:#9B59B6
+```
+
+**Key Components:**
+- **Data Preprocessing**: Handles missing values, feature engineering
+- **Model Training**: XGBoost optimized for recall/F2-score
+- **MLflow Tracking**: Experiment logging and model registry
 
 ## How to install dependencies
 
