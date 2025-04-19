@@ -22,7 +22,6 @@ In order to get the best out of the template:
 ## Architecture Overview
 
 ```mermaid
-%% Architecture Diagram for Kedro/MLflow Binary Classification Pipeline
 graph TD
     A[Raw Data\nCSV/Parquet] --> B(Data Preprocessing)
     B --> C[Processed Data]
@@ -30,14 +29,14 @@ graph TD
     subgraph Kedro Pipeline
         B -->|"1. fill_null_values()"| C
         B -->|"2. create_dummy_vars()"| C
-        B -->|"3. normalize()"| C
+        B -->|"3. normalize() (for LR)"| C
         C --> D{Model Training}
     end
     
     subgraph Model Training
         D -->|XGBoost| E[Hyperparameter Tuning\nRandomizedSearchCV]
         E -->|Best Model| F[Evaluation]
-        F --> G[Metrics: Recall, F2, Cost]
+        F --> G[Metrics: Recall, Cost]
         F --> H[Confusion Matrix]
     end
     
@@ -57,7 +56,6 @@ graph TD
     style D fill:#A2D9CE,stroke:#16A085
     style E fill:#F5B7B1,stroke:#E74C3C
     style I fill:#D2B4DE,stroke:#9B59B6
-```
 
 **Key Components:**
 - **Data Preprocessing**: Handles missing values, feature engineering
