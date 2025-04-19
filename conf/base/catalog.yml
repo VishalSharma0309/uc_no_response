@@ -1,0 +1,66 @@
+# Here you can define all your datasets by using simple YAML syntax.
+#
+# Documentation for this file format can be found in "The Data Catalog"
+# Link: https://docs.kedro.org/en/stable/data/data_catalog.html
+
+raw_data:
+  type: pandas.CSVDataset
+  filepath: data/01_raw/data.csv
+  load_args:
+    sep: ","  # Adjust if your CSV uses a different separator
+
+data_with_filled_nulls:
+  type: pandas.ParquetDataset
+  filepath: data/02_intermediate/data_with_filled_nulls.parquet
+
+data_with_dummies:
+  type: pandas.ParquetDataset
+  filepath: data/02_intermediate/data_with_dummies.parquet
+
+preprocessed_data:
+  type: pandas.ParquetDataset
+  filepath: data/02_intermediate/preprocessed_data.parquet
+
+
+# Model artifacts
+classifier:
+  type: pickle.PickleDataset  # For scikit-learn models
+  filepath: data/06_models/classifier.pkl
+  versioned: true  # Enables model versioning
+
+# Evaluation metrics
+metrics:
+  type: json.JSONDataset
+  filepath: data/08_reporting/metrics.json
+  versioned: true
+
+# XGBoost tuning artifacts
+xgboost_classifier:
+  type: pickle.PickleDataset
+  filepath: data/06_models/xgboost_classifier.pkl
+  versioned: true
+
+xgboost_tuned:
+  type: pickle.PickleDataset
+  filepath: data/06_models/xgboost_tuned.pkl
+  versioned: true
+
+xgboost_best_params:
+  type: json.JSONDataset
+  filepath: data/08_reporting/xgboost_best_params.json
+  versioned: true
+
+xgboost_cv_results_metrics:
+  type: pandas.ParquetDataset
+  filepath: data/08_reporting/xgboost_cv_results_metrics.parquet
+  versioned: true
+
+xgboost_cv_results_params:
+  type: pandas.ParquetDataset
+  filepath: data/08_reporting/xgboost_cv_results_params.parquet
+  versioned: true
+
+model_costs:
+  type: json.JSONDataset
+  filepath: data/08_reporting/model_costs.json
+  versioned: true

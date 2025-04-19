@@ -1,0 +1,75 @@
+target_column: "NR_experienced_on_request"
+
+data_preprocessing:
+  test_size: 0.2
+  user_id_column: "Unnamed: 0"
+  numerical_features:
+    - no_of_supercats_tried_last_30d
+    - no_of_supercats_tried_last_90d
+    - no_of_supercats_tried_last_365d
+    - no_of_deliveries_last_30d
+    - no_of_deliveries_last_90d
+    - no_of_deliveries_last_365d
+    - service_deliverd_aov_last_30d
+    - service_deliverd_aov_last_90d
+    - service_deliverd_aov_last_365d
+    - days_on_platform
+    - NR_experienced_last_365d
+    - revenues_next_6_months
+  categorical_features:
+    - most_deliverd_supercat
+    - income_segment
+    - gender
+    - user_state_platform
+  skip_features:
+    - "Unnamed: 0"
+    - request_id
+
+model_params:
+  logistic_regression:
+    C: 1.0
+    max_iter: 1000
+    random_state: 42
+    
+  xgboost:
+    cv_params:
+      n_folds: 5
+      scoring: "roc_auc"
+      n_jobs: -1
+      n_iter: 50
+      random_state: 42
+      
+    param_distributions:
+      learning_rate: 
+        type: "loguniform"
+        values: [0.01, 0.2]
+      max_depth: 
+        type: "randint"
+        values: [3, 10]
+      n_estimators: 
+        type: "randint"
+        values: [50, 300]
+      subsample: 
+        type: "uniform"
+        values: [0.6, 1.0]
+      colsample_bytree: 
+        type: "uniform"
+        values: [0.6, 1.0]
+      gamma: 
+        type: "uniform"
+        values: [0, 0.2]
+      min_child_weight: 
+        type: "randint"
+        values: [1, 10]
+        
+    fixed_params:
+      objective: "binary:logistic"
+      random_state: 42
+      eval_metric: "logloss"
+
+# Cost of errors
+cost_matrix:
+  true_positive: 400    # Lower profit margin
+  true_negative: 0      # Reduced savings
+  false_positive: -200  # Higher false alarm cost
+  false_negative: -500  # More severe missed detection cost
