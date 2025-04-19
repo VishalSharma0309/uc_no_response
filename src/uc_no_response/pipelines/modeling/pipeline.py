@@ -1,11 +1,10 @@
 from kedro.pipeline import Pipeline, node, pipeline
 from .nodes import (
     train_logistic_regression_model,
-    evaluate_model,
     train_xgboost, 
     tune_xgboost,
-    evaluate_xgboost,
 )
+from ..evaluation.nodes import evaluate_model
 
 def xgboost_classifier_training_pipeline(**kwargs) -> Pipeline:
     return Pipeline(
@@ -34,7 +33,7 @@ def xgboost_classifier_training_pipeline(**kwargs) -> Pipeline:
                 name="tune_xgboost_node"
             ),
             node(
-                func=evaluate_xgboost,
+                func=evaluate_model,
                 inputs=["xgboost_tuned", 
                         "X_test", "y_test", 
                         "params:data_preprocessing.skip_features",
@@ -56,9 +55,12 @@ def logistic_regression_training_pipeline(**kwargs) -> Pipeline:
             ),
             node(
                 func=evaluate_model,
-                inputs=["classifier", "X_test", "y_test", "params:data_preprocessing.skip_features"],
-                outputs="metrics",
-                name="evaluate_logistic_regression_node"
+                inputs=["classifier", 
+                        "X_test", "y_test", 
+                        "params:data_preprocessing.skip_features",
+                        "params:cost_matrix"],
+                outputs="logistic_regression_metrics",
+                name="evaluate_xgboost_node"
             )
         ]
     )

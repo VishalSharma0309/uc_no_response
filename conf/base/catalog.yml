@@ -29,9 +29,9 @@ classifier:
   versioned: true  # Enables model versioning
 
 # Evaluation metrics
-metrics:
+logistic_regression_metrics:
   type: json.JSONDataset
-  filepath: data/08_reporting/metrics.json
+  filepath: data/08_reporting/logistic_regression_metrics.json
   versioned: true
 
 # XGBoost tuning artifacts
@@ -63,4 +63,9 @@ xgboost_cv_results_params:
 model_costs:
   type: json.JSONDataset
   filepath: data/08_reporting/model_costs.json
+  versioned: true
+
+xgboost_metrics:
+  type: json.JSONDataset
+  filepath: data/08_reporting/xgboost_metrics.json
   versioned: true
