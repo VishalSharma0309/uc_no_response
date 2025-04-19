@@ -56,6 +56,8 @@ graph TD
     style D fill:#A2D9CE,stroke:#16A085
     style E fill:#F5B7B1,stroke:#E74C3C
     style I fill:#D2B4DE,stroke:#9B59B6
+```
+
 ## How to install dependencies
 
 Declare any dependencies in `requirements.txt` for `pip` installation.
