@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/vishalsharma/Downloads/urban_company/uc_no_response/mlruns/673539127110756979/1e08c1f5a1134666a9dc105efd8a7ced/artifacts
+end_time: 1745083519203
+entry_point_name: ''
+experiment_id: '673539127110756979'
+lifecycle_stage: active
+run_id: 1e08c1f5a1134666a9dc105efd8a7ced
+run_name: powerful-trout-708
+run_uuid: 1e08c1f5a1134666a9dc105efd8a7ced
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1745083518680
+status: 3
+tags: []
+user_id: vishalsharma

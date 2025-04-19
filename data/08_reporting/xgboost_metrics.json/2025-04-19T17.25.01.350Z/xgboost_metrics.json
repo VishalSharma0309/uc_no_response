@@ -1,0 +1,13 @@
+{
+  "accuracy": 0.561966440977333,
+  "precision": 0.5808980755523877,
+  "recall": 0.4752186588921283,
+  "f1": 0.522771007055805,
+  "roc_auc": 0.6017997108814649,
+  "log_loss": 0.7106047351307204,
+  "model_type": "xgboost",
+  "true_negative": 1094,
+  "false_positive": 588,
+  "false_negative": 900,
+  "true_positive": 815
+}

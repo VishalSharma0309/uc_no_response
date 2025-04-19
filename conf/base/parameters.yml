@@ -18,12 +18,26 @@ data_preprocessing:
     - revenues_next_6_months
   categorical_features:
     - most_deliverd_supercat
-    - income_segment
     - gender
     - user_state_platform
   skip_features:
     - "Unnamed: 0"
     - request_id
+    - income_segment
+  coexisting_features:
+    - no_of_supercats_tried_last_30d
+    - no_of_supercats_tried_last_90d
+    - no_of_supercats_tried_last_365d
+    - no_of_deliveries_last_30d
+    - no_of_deliveries_last_90d
+    - no_of_deliveries_last_365d
+    - service_deliverd_aov_last_30d
+    - service_deliverd_aov_last_90d
+    - service_deliverd_aov_last_365d
+  mapping_features:
+    - ['no_of_deliveries_last_30d', 'service_deliverd_aov_last_30d']
+    - ['no_of_deliveries_last_90d', 'service_deliverd_aov_last_90d']
+    - ['no_of_deliveries_last_365d', 'service_deliverd_aov_last_365d']
 
 model_params:
   logistic_regression:
@@ -34,7 +48,7 @@ model_params:
   xgboost:
     cv_params:
       n_folds: 5
-      scoring: "recall"
+      scoring: "f1"
       n_jobs: -1
       n_iter: 50
       random_state: 42

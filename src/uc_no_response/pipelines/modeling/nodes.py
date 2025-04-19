@@ -165,7 +165,7 @@ def tune_xgboost(
         final_model.set_params(**random_search.best_params_)
         final_model.fit(X_train_filtered, y_train)
         
-    mlflow.xgboost.log_model(final_model, "xgboost_tuned_model")   
+    mlflow.xgboost.log_model(final_model, "xgboost_tuned_model")
     
     return {
         "best_model": final_model,

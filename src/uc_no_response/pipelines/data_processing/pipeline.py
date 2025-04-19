@@ -1,6 +1,6 @@
 from kedro.pipeline import Pipeline, node, pipeline
 from .nodes import (
-    fill_null_values,
+    treat_null_values,
     create_dummy_variables,
     normalize_numerical_columns,
     split_data,
@@ -10,12 +10,14 @@ def logistic_regression_data_processing_pipeline(**kwargs) -> Pipeline:
     return pipeline(
         [
             node(
-                func=fill_null_values,
-                inputs=["raw_data", "params:data_preprocessing.user_id_column",
+                func=treat_null_values,
+                inputs=["raw_data", 
+                        "params:data_preprocessing.mapping_features",
+                        "params:data_preprocessing.coexisting_features",
                         "params:data_preprocessing.numerical_features",
                         "params:data_preprocessing.categorical_features"],
                 outputs="data_with_filled_nulls",
-                name="fill_null_values_node",
+                name="treat_null_values_node",
             ),
             node(
                 func=create_dummy_variables,
@@ -47,8 +49,18 @@ def xgboost_classifier_data_processing_pipeline(**kwargs) -> Pipeline:
     return pipeline(
         [
             node(
+                func=treat_null_values,
+                inputs=["raw_data", 
+                        "params:data_preprocessing.mapping_features",
+                        "params:data_preprocessing.coexisting_features",
+                        "params:data_preprocessing.numerical_features",
+                        "params:data_preprocessing.categorical_features"],
+                outputs="data_with_filled_nulls",
+                name="treat_null_values_node",
+            ),
+            node(
                 func=create_dummy_variables,
-                inputs=["raw_data",
+                inputs=["data_with_filled_nulls",
                         "params:data_preprocessing.categorical_features"],
                 outputs="data_with_dummies",
                 name="create_dummy_variables_node",

@@ -3,22 +3,22 @@ from sklearn.model_selection import train_test_split
 from typing import Dict, List
 from sklearn.preprocessing import MinMaxScaler
 
-def fill_null_values(
+def treat_null_values(
     data: pd.DataFrame,
-    user_id_column: str,
+    mapping_features: List[List],
+    coexisting_features: List[str],
     numerical_features: List[str],
     categorical_features: List[str]
 ) -> pd.DataFrame:
     """
-    Fill null values by:
-    1. First using existing values from the same user ID
-    2. Then using median for numerical features and mode for categorical features
+    Treat null values by:
+    1. First, remove any rows with more than 80% of features as null
+    2. Then convert aov to zero if deliveries is zero
+    3. Remove coexisting nulls in coexisting features
     
     Args:
         data: Input DataFrame
-        user_id_column: Column name containing user IDs
-        numerical_features: List of numerical column names
-        categorical_features: List of categorical column names
+        coexisting_features: list[str]
     
     Returns:
         pd.DataFrame: DataFrame with null values filled
@@ -26,14 +26,18 @@ def fill_null_values(
     # Make a copy to avoid SettingWithCopyWarning
     filled_data = data.copy()
     
-    # Step 1: Fill nulls using existing values from the same user
-    for column in numerical_features + categorical_features:
-        # Group by user ID and transform with first non-null value
-        filled_data[column] = filled_data.groupby(user_id_column)[column].transform(
-            lambda x: x.fillna(x.dropna().iloc[0]) if x.dropna().any() else x
-        )
-    
-    # Step 2: Fill remaining nulls with median/mode
+    # Step 1: Remove rows with more than 80% null values
+    threshold = 0.8 * len(filled_data.columns)
+    filled_data = filled_data.dropna(thresh=len(filled_data.columns) - threshold + 1)
+
+    # Step 2: Convert aov to zero if deliveries is zero
+    for delivery_col, aov_col in mapping_features:
+        filled_data.loc[filled_data[delivery_col] == 0, aov_col] = 0
+
+    # Step 3: Coexisting features with all nulls can be removed
+    filled_data.dropna(inplace=True, subset=coexisting_features)
+
+    # Step 4: Fill remaining nulls with median for numerical features
     for column in numerical_features:
         filled_data[column] = filled_data[column].fillna(filled_data[column].median())
     
@@ -41,6 +45,8 @@ def fill_null_values(
         filled_data[column] = filled_data[column].fillna(filled_data[column].mode()[0])
     
     return filled_data
+
+
 
 
 def create_dummy_variables(
