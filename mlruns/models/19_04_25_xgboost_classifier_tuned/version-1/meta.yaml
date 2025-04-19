@@ -1,0 +1,14 @@
+aliases: []
+creation_timestamp: 1745041520702
+current_stage: None
+description: ''
+last_updated_timestamp: 1745041520702
+name: 19_04_25_xgboost_classifier_tuned
+run_id: a25d0a1870e941c08dd6fc81f02fed01
+run_link: ''
+source: file:///Users/vishalsharma/Downloads/urban_company/uc_no_response/mlruns/673539127110756979/a25d0a1870e941c08dd6fc81f02fed01/artifacts/xgboost_tuned_model
+status: READY
+status_message: null
+storage_location: file:///Users/vishalsharma/Downloads/urban_company/uc_no_response/mlruns/673539127110756979/a25d0a1870e941c08dd6fc81f02fed01/artifacts/xgboost_tuned_model
+user_id: null
+version: 1

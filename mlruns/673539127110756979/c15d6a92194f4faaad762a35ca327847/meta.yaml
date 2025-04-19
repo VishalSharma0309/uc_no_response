@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/vishalsharma/Downloads/urban_company/uc_no_response/mlruns/673539127110756979/c15d6a92194f4faaad762a35ca327847/artifacts
+end_time: 1744986646868
+entry_point_name: ''
+experiment_id: '673539127110756979'
+lifecycle_stage: active
+run_id: c15d6a92194f4faaad762a35ca327847
+run_name: train_logistic_regression
+run_uuid: c15d6a92194f4faaad762a35ca327847
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1744986607178
+status: 4
+tags: []
+user_id: vishalsharma

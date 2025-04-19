@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/vishalsharma/Downloads/urban_company/uc_no_response/mlruns/673539127110756979/2f98c9eb3a184b20b6237735dc542878/artifacts
+end_time: 1745006708124
+entry_point_name: ''
+experiment_id: '673539127110756979'
+lifecycle_stage: active
+run_id: 2f98c9eb3a184b20b6237735dc542878
+run_name: stylish-smelt-712
+run_uuid: 2f98c9eb3a184b20b6237735dc542878
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1745006705412
+status: 3
+tags: []
+user_id: vishalsharma

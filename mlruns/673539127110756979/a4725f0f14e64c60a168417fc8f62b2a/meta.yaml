@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/vishalsharma/Downloads/urban_company/uc_no_response/mlruns/673539127110756979/a4725f0f14e64c60a168417fc8f62b2a/artifacts
+end_time: 1744976877536
+entry_point_name: ''
+experiment_id: '673539127110756979'
+lifecycle_stage: active
+run_id: a4725f0f14e64c60a168417fc8f62b2a
+run_name: __default__
+run_uuid: a4725f0f14e64c60a168417fc8f62b2a
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1744976877528
+status: 4
+tags: []
+user_id: vishalsharma

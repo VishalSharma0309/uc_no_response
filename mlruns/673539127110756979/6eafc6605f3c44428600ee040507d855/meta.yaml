@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/vishalsharma/Downloads/urban_company/uc_no_response/mlruns/673539127110756979/6eafc6605f3c44428600ee040507d855/artifacts
+end_time: 1745041872242
+entry_point_name: ''
+experiment_id: '673539127110756979'
+lifecycle_stage: active
+run_id: 6eafc6605f3c44428600ee040507d855
+run_name: nebulous-cub-433
+run_uuid: 6eafc6605f3c44428600ee040507d855
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1745041872110
+status: 3
+tags: []
+user_id: vishalsharma

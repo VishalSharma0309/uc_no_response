@@ -1,0 +1,51 @@
+{
+  "learning_rate": {
+    "type": "loguniform",
+    "values": [
+      0.01,
+      0.2
+    ]
+  },
+  "max_depth": {
+    "type": "randint",
+    "values": [
+      3,
+      10
+    ]
+  },
+  "n_estimators": {
+    "type": "randint",
+    "values": [
+      50,
+      300
+    ]
+  },
+  "subsample": {
+    "type": "uniform",
+    "values": [
+      0.6,
+      1.0
+    ]
+  },
+  "colsample_bytree": {
+    "type": "uniform",
+    "values": [
+      0.6,
+      1.0
+    ]
+  },
+  "gamma": {
+    "type": "uniform",
+    "values": [
+      0,
+      0.2
+    ]
+  },
+  "min_child_weight": {
+    "type": "randint",
+    "values": [
+      1,
+      10
+    ]
+  }
+}

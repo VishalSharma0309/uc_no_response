@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/vishalsharma/Downloads/urban_company/uc_no_response/mlruns/673539127110756979/8ad5b4e086c34184914c946b04af847f/artifacts
+end_time: 1745040177240
+entry_point_name: ''
+experiment_id: '673539127110756979'
+lifecycle_stage: active
+run_id: 8ad5b4e086c34184914c946b04af847f
+run_name: clean-sheep-158
+run_uuid: 8ad5b4e086c34184914c946b04af847f
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1745040174534
+status: 3
+tags: []
+user_id: vishalsharma

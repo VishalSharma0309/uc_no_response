@@ -1,0 +1,1 @@
+{'n_folds': 5, 'scoring': 'roc_auc', 'n_jobs': -1}

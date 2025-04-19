@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/vishalsharma/Downloads/urban_company/uc_no_response/mlruns/673539127110756979/e370a2e9458241e6a82847fd04665a7a/artifacts
+end_time: 1745006345231
+entry_point_name: ''
+experiment_id: '673539127110756979'
+lifecycle_stage: active
+run_id: e370a2e9458241e6a82847fd04665a7a
+run_name: omniscient-crab-333
+run_uuid: e370a2e9458241e6a82847fd04665a7a
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1745006342078
+status: 3
+tags: []
+user_id: vishalsharma

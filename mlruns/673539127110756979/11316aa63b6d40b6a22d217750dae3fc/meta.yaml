@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/vishalsharma/Downloads/urban_company/uc_no_response/mlruns/673539127110756979/11316aa63b6d40b6a22d217750dae3fc/artifacts
+end_time: 1745046208246
+entry_point_name: ''
+experiment_id: '673539127110756979'
+lifecycle_stage: active
+run_id: 11316aa63b6d40b6a22d217750dae3fc
+run_name: masked-newt-618
+run_uuid: 11316aa63b6d40b6a22d217750dae3fc
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1745046208114
+status: 3
+tags: []
+user_id: vishalsharma
