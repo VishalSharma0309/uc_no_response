@@ -1,6 +1,7 @@
+import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
-from typing import Dict, List
+from typing import Dict, List, Tuple
 from sklearn.preprocessing import MinMaxScaler
 
 def treat_null_values(
@@ -47,11 +48,72 @@ def treat_null_values(
     return filled_data
 
 
+def create_engineered_features(data: pd.DataFrame) -> Tuple[pd.DataFrame, list]:
+    """
+    Creates new features with zero-division protection
+    Returns:
+        - DataFrame with new features
+        - List of new feature names
+    """
+    df = data.copy()
+    new_features = []
+    
+    # 1. Delivery Intensity
+    df['delivery_intensity'] = np.where(
+        df['no_of_deliveries_last_365d'] > 0,
+        df['no_of_deliveries_last_30d'] / df['no_of_deliveries_last_365d'],
+        0  # Default when no yearly deliveries
+    )
+    new_features.append('delivery_intensity')
+    
+    # 2. NR (Non-Response) Frequency
+    df['NR_frequency'] = np.where(
+        df['no_of_deliveries_last_365d'] > 0,
+        df['NR_experienced_last_365d'] / df['no_of_deliveries_last_365d'],
+        0
+    )
+    new_features.append('NR_frequency')
+    
+    # 3. AOV Change (30d vs 365d)
+    df['aov_change_30d'] = np.where(
+        df['service_deliverd_aov_last_365d'] > 0,
+        (df['service_deliverd_aov_last_30d'] - df['service_deliverd_aov_last_365d']) / 
+        df['service_deliverd_aov_last_365d'],
+        0
+    )
+    new_features.append('aov_change_30d')
+    
+    # 4. LTV/AOV Ratio
+    df['ltv_aov_ratio'] = np.where(
+        df['service_deliverd_aov_last_365d'] > 0,
+        df['revenues_next_6_months'] / df['service_deliverd_aov_last_365d'],
+        0
+    )
+    new_features.append('ltv_aov_ratio')
+    
+    # 5. Customer Tenure Categories
+    bins = [0, 500, 1000, 1500, 2000, np.inf]
+    labels = ['<500', '500-1000', '1000-1500', '1500-2000', '2000+']
+    df['customer_tenure_category'] = pd.cut(
+        df['days_on_platform'],
+        bins=bins,
+        labels=labels,
+        right=False
+    )
+    new_features.append('customer_tenure_category')
+    
+    # Add indicator columns for zero denominators
+    df['has_365d_deliveries'] = (df['no_of_deliveries_last_365d'] > 0).astype(int)
+    df['has_aov_history'] = (df['service_deliverd_aov_last_365d'] > 0).astype(int)
+    new_features.extend(['has_365d_deliveries', 'has_aov_history'])
+    
+    return df, new_features
 
 
 def create_dummy_variables(
     data: pd.DataFrame,
-    categorical_features: List[str]
+    categorical_features: List[str],
+    categorical_engineered: List[str],
 ) -> pd.DataFrame:
     """
     Create dummy variables for categorical features with advanced name sanitization
@@ -59,6 +121,7 @@ def create_dummy_variables(
     Args:
         data: Input DataFrame
         categorical_features: List of categorical column names to convert to dummies
+        categorical_engineered: List of engineered categorical features
         
     Returns:
         pd.DataFrame: DataFrame with properly sanitized dummy variables
@@ -67,7 +130,7 @@ def create_dummy_variables(
     processed_data = data.copy()
     
     # Create dummies for each categorical feature (with original names first)
-    for feature in categorical_features:
+    for feature in categorical_features + categorical_engineered:
         if feature in processed_data.columns:
             # Get unique values to determine if dummy creation is needed
             unique_values = processed_data[feature].nunique()

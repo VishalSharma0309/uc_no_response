@@ -14,64 +14,6 @@ from sklearn.metrics import (
 )
 import tempfile
 
-
-# def evaluate_logistic_regression_model(
-#     model: LogisticRegression,
-#     X_test: Union[pd.DataFrame, np.ndarray],
-#     y_test: Union[pd.Series, np.ndarray],
-#     skip_features: List[str]
-# ) -> dict:
-#     """
-#     Evaluate model performance after removing specified features
-    
-#     Args:
-#         model: Trained model
-#         X_test: Test features
-#         y_test: Test labels
-#         skip_features: List of features to exclude (must match training)
-        
-#     Returns:
-#         Dictionary of evaluation metrics
-#     """
-    
-    
-#     # Remove same features as training
-#     features_to_keep = [col for col in X_test.columns if col not in skip_features]
-#     X_test_filtered = X_test[features_to_keep]
-    
-#     # Generate predictions and calculate metrics
-#     y_pred = model.predict(X_test_filtered)
-#     y_proba = model.predict_proba(X_test_filtered)[:, 1]
-
-#     metrics = {
-#         "accuracy": accuracy_score(y_test, y_pred),
-#         "precision": precision_score(y_test, y_pred),
-#         "recall": recall_score(y_test, y_pred),
-#         "f1": f1_score(y_test, y_pred),
-#         "roc_auc": roc_auc_score(y_test, y_proba),
-#         "log_loss": log_loss(y_test, y_proba),
-#         "model_type": "logistic_regression"
-#     }
-
-#     # Create and log confusion matrix
-#     cm = confusion_matrix(y_test, y_pred)
-    
-#     # Log metrics to MLflow
-#     for name, value in metrics.items():
-#         if name != "model_type":
-#             mlflow.log_metric(name, value)
-
-#     # Add confusion matrix values to metrics
-#     metrics.update({
-#         "true_negative": int(cm[0, 0]),
-#         "false_positive": int(cm[0, 1]),
-#         "false_negative": int(cm[1, 0]),
-#         "true_positive": int(cm[1, 1])
-#     })
-    
-#     return metrics
-
-
 def evaluate_model(
     model: XGBClassifier,
     X_test: pd.DataFrame,

@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/vishalsharma/Downloads/urban_company/uc_no_response/mlruns/673539127110756979/a01139afa893490cbefd8a0288e8fd04/artifacts
+end_time: 1745127149677
+entry_point_name: ''
+experiment_id: '673539127110756979'
+lifecycle_stage: active
+run_id: a01139afa893490cbefd8a0288e8fd04
+run_name: casual-turtle-624
+run_uuid: a01139afa893490cbefd8a0288e8fd04
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1745127149110
+status: 3
+tags: []
+user_id: vishalsharma
