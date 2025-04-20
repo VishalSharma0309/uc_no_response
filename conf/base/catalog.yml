@@ -15,21 +15,21 @@ data_with_filled_nulls:
 
 data_with_new_features:
   type: pandas.ParquetDataset
-  filepath: data/02_intermediate/data_with_new_features.parquet
+  filepath: data/04_feature/data_with_new_features.parquet
   versioned: true
 
 new_feature_names:
   type: pickle.PickleDataset
-  filepath: data/02_intermediate/new_feature_names.pkl
+  filepath: data/04_feature/new_feature_names.pkl
   versioned: true
 
 data_with_dummies:
   type: pandas.ParquetDataset
-  filepath: data/02_intermediate/data_with_dummies.parquet
+  filepath: data/05_model_input/data_with_dummies.parquet
 
 preprocessed_data:
   type: pandas.ParquetDataset
-  filepath: data/02_intermediate/preprocessed_data.parquet
+  filepath: data/05_model_input/preprocessed_data.parquet
 
 
 # Model artifacts

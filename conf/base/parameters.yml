@@ -48,6 +48,12 @@ data_preprocessing:
     - customer_tenure_category
     - has_365d_deliveries
     - has_aov_history
+  engineered_features_analysis:
+    - delivery_intensity
+    - NR_frequency
+    - aov_change_30d
+    - ltv_aov_ratio
+    - customer_tenure_category
 
 model_params:
   logistic_regression:
