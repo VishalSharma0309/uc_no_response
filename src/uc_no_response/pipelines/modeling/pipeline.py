@@ -1,13 +1,15 @@
 from kedro.pipeline import Pipeline, node, pipeline
 from .nodes import (
     train_logistic_regression_model,
+    train_xgboost_regressor,
     train_xgboost, 
     tune_xgboost,
 )
 from ..evaluation.nodes import (
     evaluate_model,
     tune_threshold,
-    evaluate_with_optimal_threshold
+    evaluate_with_optimal_threshold,
+    evaluate_regression_model
 )
 
 def xgboost_classifier_training_pipeline(**kwargs) -> Pipeline:
@@ -76,6 +78,28 @@ def logistic_regression_training_pipeline(**kwargs) -> Pipeline:
                         "params:data_preprocessing.skip_features",
                         "params:cost_matrix"],
                 outputs="logistic_regression_metrics",
+                name="evaluate_xgboost_node"
+            )
+        ]
+    )
+
+
+def xgboost_regressor_training_pipeline(**kwargs) -> Pipeline:
+    return Pipeline(
+        [
+            node(
+                func=train_xgboost_regressor,
+                inputs=["X_train", "y_train", "X_test", "y_test",
+                        "params:model_params.xgboost", "params:xgboost_regression.feature_selection.skip_features"],
+                outputs="xgboost_regressor",
+                name="train_xgboost_node"
+            ),
+            node(
+                func=evaluate_regression_model,
+                inputs=["xgboost_regressor", 
+                        "X_test", "y_test", 
+                        "params:xgboost_regression.feature_selection.skip_features"],
+                outputs="xgboost_regressor_metrics",
                 name="evaluate_xgboost_node"
             )
         ]

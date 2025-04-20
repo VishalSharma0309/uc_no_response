@@ -91,3 +91,42 @@ def xgboost_classifier_data_processing_pipeline(**kwargs) -> Pipeline:
             )
         ]
     )
+
+def xgboost_regressor_data_processing_pipeline(**kwargs) -> Pipeline:
+    return pipeline(
+        [
+            node(
+                func=treat_null_values,
+                inputs=["raw_data", 
+                        "params:data_preprocessing.mapping_features",
+                        "params:data_preprocessing.coexisting_features",
+                        "params:data_preprocessing.numerical_features",
+                        "params:data_preprocessing.categorical_features"],
+                outputs="data_with_filled_nulls",
+                name="treat_null_values_node",
+            ),
+            node(
+                func=create_engineered_features,
+                inputs="data_with_filled_nulls",
+                outputs=["data_with_new_features", "new_feature_names"],
+                name="create_engineered_features_node"
+            ),
+            node(
+                func=create_dummy_variables,
+                inputs=["data_with_new_features",
+                        "params:data_preprocessing.categorical_features", 
+                        "params:data_preprocessing.categorical_engineered"],
+                outputs="data_with_dummies",
+                name="create_dummy_variables_node",
+            ),
+            node(
+                func=split_data,
+                inputs=["data_with_dummies", 
+                        "params:xgboost_regression.target", 
+                        "params:xgboost_regression.test_size", 
+                        "params:model_params.xgboost.fixed_params.random_state"],
+                outputs=["X_train", "X_test", "y_train", "y_test"],
+                name="preprocess_data_node",
+            )
+        ]
+    )

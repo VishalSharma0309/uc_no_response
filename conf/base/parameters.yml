@@ -103,3 +103,23 @@ cost_matrix:
   true_negative: 0      # Reduced savings
   false_positive: -200  # Higher false alarm cost
   false_negative: -500  # More severe missed detection cost
+
+xgboost_regression:
+  target: revenues_next_6_months
+  test_size: 0.2
+  model_params:
+    objective: "reg:squarederror"
+    eval_metric: ["rmse", "mae"]
+    max_depth: 6
+    learning_rate: 0.1
+    n_estimators: 200
+    subsample: 0.8
+    colsample_bytree: 0.8
+    random_state: 42
+
+  feature_selection:
+    skip_features:
+      - "Unnamed: 0"
+      - request_id
+      - income_segment
+      - ltv_aov_ratio

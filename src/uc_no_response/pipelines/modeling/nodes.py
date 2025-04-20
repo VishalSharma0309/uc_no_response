@@ -5,7 +5,8 @@ import mlflow
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.linear_model import LogisticRegression
-from xgboost import XGBClassifier
+import xgboost as xgb
+from xgboost import XGBClassifier, XGBRegressor
 from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
 from typing import List, Union, Dict, Any
 from scipy.stats import loguniform, randint, uniform
@@ -186,4 +187,28 @@ def get_param_distributions(param_config: Dict) -> Dict:
             param_dist[param] = uniform(config["values"][0], 
                                       config["values"][1] - config["values"][0])
     return param_dist
+
+
+def train_xgboost_regressor(X_train, y_train, X_test, y_test, params, skip_features):
+    """Train XGBoost regression model"""
+    features_to_keep = [col for col in X_test.columns if col not in skip_features]
+    X_filtered = X_train[features_to_keep]
+    X_test_filtered = X_test[features_to_keep]
+    
+    model = XGBRegressor(**params)
+    model.fit(
+        X_filtered, y_train,
+        eval_set=[(X_test_filtered, y_test)],
+        verbose=10
+    )
+    
+    # Log feature importance
+    fig, ax = plt.subplots(figsize=(10, 8))
+    xgb.plot_importance(model, ax=ax)
+    mlflow.log_figure(fig, "feature_importance.png")
+    plt.close()
+
+    mlflow.xgboost.log_model(model, "xgboost_regressor")
+    
+    return model
 

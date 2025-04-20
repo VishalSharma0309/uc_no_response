@@ -1,0 +1,14 @@
+aliases: []
+creation_timestamp: 1745157649444
+current_stage: None
+description: ''
+last_updated_timestamp: 1745157649444
+name: 20_04_xgboost
+run_id: c9ac869ea28b46b9afd7aa5a021c4aea
+run_link: ''
+source: file:///Users/vishalsharma/Downloads/urban_company/uc_no_response/mlruns/673539127110756979/c9ac869ea28b46b9afd7aa5a021c4aea/artifacts/xgboost_tuned_model
+status: READY
+status_message: null
+storage_location: file:///Users/vishalsharma/Downloads/urban_company/uc_no_response/mlruns/673539127110756979/c9ac869ea28b46b9afd7aa5a021c4aea/artifacts/xgboost_tuned_model
+user_id: null
+version: 1

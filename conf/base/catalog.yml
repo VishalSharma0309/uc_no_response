@@ -50,6 +50,11 @@ xgboost_classifier:
   filepath: data/06_models/xgboost_classifier.pkl
   versioned: true
 
+xgboost_regressor:
+  type: pickle.PickleDataset
+  filepath: data/06_models/xgboost_regressor.pkl
+  versioned: true
+
 xgboost_tuned:
   type: pickle.PickleDataset
   filepath: data/06_models/xgboost_tuned.pkl
@@ -78,6 +83,11 @@ model_costs:
 xgboost_metrics:
   type: json.JSONDataset
   filepath: data/08_reporting/xgboost_metrics.json
+  versioned: true
+
+xgboost_regressor_metrics:
+  type: pickle.PickleDataset
+  filepath: data/08_reporting/xgboost_regressor_metrics.pkl
   versioned: true
 
 shap_plots:

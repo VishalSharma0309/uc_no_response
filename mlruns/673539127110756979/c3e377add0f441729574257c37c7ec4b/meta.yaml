@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/vishalsharma/Downloads/urban_company/uc_no_response/mlruns/673539127110756979/c3e377add0f441729574257c37c7ec4b/artifacts
+end_time: 1745156709287
+entry_point_name: ''
+experiment_id: '673539127110756979'
+lifecycle_stage: active
+run_id: c3e377add0f441729574257c37c7ec4b
+run_name: dapper-mouse-995
+run_uuid: c3e377add0f441729574257c37c7ec4b
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1745156708763
+status: 3
+tags: []
+user_id: vishalsharma

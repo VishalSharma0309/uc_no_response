@@ -14,6 +14,9 @@ from scipy.stats import loguniform, randint, uniform
 from sklearn.metrics import (
     accuracy_score, precision_score, recall_score, f1_score, roc_auc_score, log_loss, confusion_matrix
 )
+from sklearn.metrics import (
+    mean_squared_error, mean_absolute_error, r2_score
+)
 import tempfile
 
 def evaluate_model(
@@ -88,6 +91,53 @@ def evaluate_model(
         model, X_test, y_test, skip_features, cost_matrix
     )
     metrics.update(metrics_shap)
+    return metrics
+
+def evaluate_regression_model(model, X_test, y_test, skip_features):
+    """Evaluate model performance and log results"""
+
+    features_to_keep = [col for col in X_test.columns if col not in skip_features]
+    X_test_filtered = X_test[features_to_keep]
+    y_pred = model.predict(X_test_filtered)
+    
+    metrics = {
+        "rmse": np.sqrt(mean_squared_error(y_test, y_pred)),
+        "mae": mean_absolute_error(y_test, y_pred),
+        "r2": r2_score(y_test, y_pred),
+        "mean_actual": np.mean(y_test),
+        "mean_predicted": np.mean(y_pred)
+    }
+    
+    # Log metrics
+    mlflow.log_metrics(metrics)
+    
+    # Residual plot
+    residuals = y_test - y_pred
+    plt.figure(figsize=(10, 6))
+    sns.scatterplot(x=y_pred, y=residuals)
+    plt.axhline(0, color='r', linestyle='--')
+    plt.xlabel("Predicted Values")
+    plt.ylabel("Residuals")
+    plt.title("Residual Analysis")
+    mlflow.log_figure(plt.gcf(), "residual_plot.png")
+    plt.close()
+    
+    # SHAP analysis (sample for efficiency)
+    features_to_keep = [col for col in X_test.columns 
+                       if col not in skip_features and
+                       X_test[col].dtype.kind in 'bifc']  # Only bool, int, float, complex
+    
+    X_test_numeric = X_test[features_to_keep].astype(float)
+
+    sample_idx = np.random.choice(len(X_test_numeric), min(500, len(X_test_numeric)), replace=False)
+    explainer = shap.Explainer(model, X_test_numeric.iloc[sample_idx])
+    shap_values = explainer(X_test_numeric.iloc[sample_idx])
+    
+    plt.figure()
+    shap.summary_plot(shap_values, X_test_numeric.iloc[sample_idx], show=False)
+    mlflow.log_figure(plt.gcf(), "shap_summary.png")
+    plt.close()
+    
     return metrics
 
 

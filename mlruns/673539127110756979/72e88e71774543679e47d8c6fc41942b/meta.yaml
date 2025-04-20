@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/vishalsharma/Downloads/urban_company/uc_no_response/mlruns/673539127110756979/72e88e71774543679e47d8c6fc41942b/artifacts
+end_time: 1745161758766
+entry_point_name: ''
+experiment_id: '673539127110756979'
+lifecycle_stage: active
+run_id: 72e88e71774543679e47d8c6fc41942b
+run_name: train_xgboost_regression
+run_uuid: 72e88e71774543679e47d8c6fc41942b
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1745161753113
+status: 4
+tags: []
+user_id: vishalsharma
