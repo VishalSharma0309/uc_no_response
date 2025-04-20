@@ -4,7 +4,11 @@ from .nodes import (
     train_xgboost, 
     tune_xgboost,
 )
-from ..evaluation.nodes import evaluate_model
+from ..evaluation.nodes import (
+    evaluate_model,
+    tune_threshold,
+    evaluate_with_optimal_threshold
+)
 
 def xgboost_classifier_training_pipeline(**kwargs) -> Pipeline:
     return Pipeline(
@@ -40,6 +44,18 @@ def xgboost_classifier_training_pipeline(**kwargs) -> Pipeline:
                         "params:cost_matrix"],
                 outputs="xgboost_metrics",
                 name="evaluate_xgboost_node"
+            ),
+            node(
+                func=tune_threshold,
+                inputs=["xgboost_tuned", "X_test", "y_test", "params:data_preprocessing.skip_features", "params:cost_matrix"],
+                outputs=["optimal_threshold", "threshold_plot"],
+                name="tune_threshold_node"
+            ),
+            node(
+                func=evaluate_with_optimal_threshold,
+                inputs=["xgboost_tuned", "X_test", "y_test", "optimal_threshold", "params:data_preprocessing.skip_features"],
+                outputs="threshold_metrics",
+                name="evaluate_with_threshold_node"
             )
         ]
     )

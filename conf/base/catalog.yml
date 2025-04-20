@@ -84,3 +84,13 @@ shap_plots:
   type: matplotlib.MatplotlibWriter
   filepath: data/08_reporting/shap_plots
   versioned: true
+
+optimal_threshold:
+  type: pickle.PickleDataset
+  filepath: data/06_models/optimal_threshold.pkl
+  versioned: true
+
+threshold_plot:
+  type: matplotlib.MatplotlibWriter
+  filepath: data/08_reporting/threshold_tuning_plot.png
+  versioned: true

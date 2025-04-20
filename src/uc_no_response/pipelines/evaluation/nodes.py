@@ -82,7 +82,7 @@ def evaluate_model(
         "cost_per_instance": cost_per_instance
     })
     mlflow.log_dict(cost_matrix, "cost_matrix.json")
-    log_confusion_matrix(y_test, y_pred)
+    log_confusion_matrix(y_test, y_pred, "confusion_matrix")
 
     metrics_shap = evaluate_model_with_shap(
         model, X_test, y_test, skip_features, cost_matrix
@@ -169,7 +169,7 @@ def log_feature_importance(model, feature_names):
 
 
 
-def log_confusion_matrix(y_test, y_pred):
+def log_confusion_matrix(y_test, y_pred, name):
     # Create and log confusion matrix
     cm = confusion_matrix(y_test, y_pred)
     
@@ -184,7 +184,7 @@ def log_confusion_matrix(y_test, y_pred):
     # Save to temporary file and log to MLflow
     with tempfile.NamedTemporaryFile(suffix='.png') as tmpfile:
         plt.savefig(tmpfile.name, bbox_inches='tight', dpi=300)
-        mlflow.log_artifact(tmpfile.name, "confusion_matrix")
+        mlflow.log_artifact(tmpfile.name, name)
     plt.close()
 
 
@@ -212,3 +212,84 @@ def calculate_model_cost(
         (confusion_matrix["false_positive"] * cost_matrix["false_positive"]) +
         (confusion_matrix["false_negative"] * cost_matrix["false_negative"])
     )
+
+def tune_threshold(model, X_val, y_val, skip_features, cost_matrix):
+    """Find optimal threshold based on validation set"""
+    
+    # Filter features (same as training)
+    features_to_keep = [col for col in X_val.columns if col not in skip_features]
+    X_test_filtered = X_val[features_to_keep]
+
+    # Get predicted probabilities
+    y_proba = model.predict_proba(X_test_filtered)[:, 1]
+    
+    # Test thresholds from 0.01 to 0.99
+    thresholds = np.linspace(0.01, 0.99, 100)
+    costs = []
+
+    
+    for thresh in thresholds:
+        y_pred = (y_proba >= thresh).astype(int)
+        # Calculate confusion matrix
+        cm = confusion_matrix(y_val, y_pred)
+        cm_counts = {
+            "true_negative": int(cm[0, 0]),
+            "false_positive": int(cm[0, 1]),
+            "false_negative": int(cm[1, 0]),
+            "true_positive": int(cm[1, 1])
+        }
+        costs.append(calculate_model_cost(cm_counts, cost_matrix))
+    
+    # Find optimal threshold
+    optimal_idx = np.argmax(costs)
+    optimal_threshold = thresholds[optimal_idx]
+    min_cost = costs[optimal_idx]
+    min_cost_per_instance = min_cost / len(y_val)
+    
+    # Create plot
+    plt.figure(figsize=(10, 6))
+    plt.plot(thresholds, costs, 'b-')
+    plt.axvline(optimal_threshold, color='r', linestyle='--', 
+                label=f'Optimal Threshold: {optimal_threshold:.2f}')
+    plt.xlabel('Threshold')
+    plt.ylabel('Cost per Instance')
+    plt.title('Threshold Tuning Based on Cost')
+    plt.legend()
+    plt.grid(True)
+    
+    # Log threshold plot
+    mlflow.log_figure(plt.gcf(), "threshold_tuning.png")
+    mlflow.log_param("optimal_threshold", optimal_threshold)
+    mlflow.log_metric("min_cost", min_cost)
+    mlflow.log_metric("min_cost_per_instance", min_cost_per_instance)
+
+    return optimal_threshold, plt.gcf()
+
+
+def evaluate_with_optimal_threshold(model, X_test, y_test, threshold, skip_features):
+    """Evaluate model with custom threshold"""
+
+    # Filter features (same as training)
+    features_to_keep = [col for col in X_test.columns if col not in skip_features]
+    X_test_filtered = X_test[features_to_keep]
+
+    y_proba = model.predict_proba(X_test_filtered)[:, 1]
+    y_pred = (y_proba >= threshold).astype(int)
+    
+    log_confusion_matrix(y_test, y_pred, "confusion_matrix_tuned")
+    # Calculate metrics
+    metrics = {
+        "tuned_accuracy": accuracy_score(y_test, y_pred),
+        "tuned_precision": precision_score(y_test, y_pred),
+        "tuned_recall": recall_score(y_test, y_pred),
+        "tuned_f1": f1_score(y_test, y_pred),
+        "tuned_roc_auc": roc_auc_score(y_test, y_proba),
+        "tuned_log_loss": log_loss(y_test, y_proba),
+    }
+    
+    # Log metrics to MLflow
+    for name, value in metrics.items():
+        if name != "model_type":
+            mlflow.log_metric(name, value)
+    
+    return metrics

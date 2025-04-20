@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/vishalsharma/Downloads/urban_company/uc_no_response/mlruns/673539127110756979/8afa5a788cc5405d81f1ab1c16a8bc4f/artifacts
+end_time: 1745134682645
+entry_point_name: ''
+experiment_id: '673539127110756979'
+lifecycle_stage: active
+run_id: 8afa5a788cc5405d81f1ab1c16a8bc4f
+run_name: trusting-hound-643
+run_uuid: 8afa5a788cc5405d81f1ab1c16a8bc4f
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1745134682112
+status: 3
+tags: []
+user_id: vishalsharma
