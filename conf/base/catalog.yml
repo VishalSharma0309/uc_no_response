@@ -79,3 +79,8 @@ xgboost_metrics:
   type: json.JSONDataset
   filepath: data/08_reporting/xgboost_metrics.json
   versioned: true
+
+shap_plots:
+  type: matplotlib.MatplotlibWriter
+  filepath: data/08_reporting/shap_plots
+  versioned: true

@@ -1,6 +1,8 @@
 
 import pandas as pd
 import numpy as np
+import shap
+from pathlib import Path
 import mlflow
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -80,11 +82,78 @@ def evaluate_model(
         "cost_per_instance": cost_per_instance
     })
     mlflow.log_dict(cost_matrix, "cost_matrix.json")
-
     log_confusion_matrix(y_test, y_pred)
-    
+
+    metrics_shap = evaluate_model_with_shap(
+        model, X_test, y_test, skip_features, cost_matrix
+    )
+    metrics.update(metrics_shap)
     return metrics
 
+
+def evaluate_model_with_shap(
+    model, 
+    X_test: pd.DataFrame, 
+    y_test: pd.Series,
+    skip_features: List[str],
+    cost_matrix: dict,
+    n_samples: int = 1000  # Use subset for faster computation
+) -> dict:
+    """
+    Evaluate model with SHAP analysis and cost metrics
+    """
+
+    # 1. Filter and prepare data
+    features_to_keep = [col for col in X_test.columns 
+                       if col not in skip_features and
+                       X_test[col].dtype.kind in 'bifc']  # Only bool, int, float, complex
+    
+    X_test_numeric = X_test[features_to_keep].astype(float)
+    
+    
+    # Sample data for faster SHAP computation
+    if len(X_test_numeric) > n_samples:
+        sample_idx = np.random.choice(len(X_test_numeric), n_samples, replace=False)
+        X_shap = X_test_numeric.iloc[sample_idx]
+    else:
+        X_shap = X_test_numeric
+    
+    # Generate SHAP values
+    explainer = shap.Explainer(model, X_shap)
+    shap_values = explainer(X_shap)
+    
+    # Create output directory
+    shap_dir = Path("data/08_reporting/shap_plots")
+    shap_dir.mkdir(exist_ok=True)
+    
+    # 1. Summary Plot
+    plt.figure()
+    shap.summary_plot(shap_values, X_shap, show=False)
+    summary_path = shap_dir / "shap_summary.png"
+    plt.tight_layout()
+    plt.savefig(summary_path)
+    plt.close()
+    
+    # 2. Feature Importance Plot
+    plt.figure()
+    shap.plots.bar(shap_values, show=False)
+    bar_path = shap_dir / "shap_feature_importance.png"
+    plt.tight_layout()
+    plt.savefig(bar_path)
+    plt.close()
+    
+    # Log to MLflow
+    mlflow.log_artifact(str(summary_path))
+    mlflow.log_artifact(str(bar_path))
+
+    # Add SHAP metadata
+    metrics = {
+        "shap_mean_abs": {feature: np.mean(np.abs(shap_values.values[:, i]))
+                          for i, feature in enumerate(X_shap.columns)},
+        "shap_n_samples": len(X_shap)
+    }
+    
+    return metrics
 
 
 def log_feature_importance(model, feature_names):
